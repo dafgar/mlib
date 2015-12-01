@@ -1,8 +1,9 @@
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
-def plot_corr_heatmap(corr_dataframe):
+def cluster_corr_matrix(corr_dataframe, linkage='single'):
     '''
     https://github.com/LeiG/Applied-Predictive-Modeling-with-Python.git
     '''
@@ -11,14 +12,13 @@ def plot_corr_heatmap(corr_dataframe):
     corr_matrix = np.array(corr_dataframe)
     col_names = corr_dataframe.columns
 
-    Y = sch.linkage(corr_matrix, 'single', 'correlation')
+    Y = sch.linkage(corr_matrix, linkage, 'correlation')
     Z = sch.dendrogram(Y, color_threshold=0, no_plot=True)['leaves']
     corr_matrix = corr_matrix[Z, :]
     corr_matrix = corr_matrix[:, Z]
     col_names = col_names[Z]
 
-    plt.imshow(corr_matrix, interpolation='nearest', aspect='auto', cmap='bwr')
-    plt.colorbar()
-    plt.xticks(range(corr_matrix.shape[0]), col_names, rotation='vertical', fontsize=4)
-    plt.yticks(range(corr_matrix.shape[0]), col_names[::-1], fontsize=4)
+    corr_dataframe = pd.DataFrame(corr_matrix, columns=col_names, index=col_names)
+
+    return corr_dataframe
 
