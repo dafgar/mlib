@@ -1,3 +1,5 @@
+from __future__ import division
+
 #import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -21,4 +23,20 @@ def cluster_corr_matrix(corr_dataframe, linkage='single'):
     corr_dataframe = pd.DataFrame(corr_matrix, columns=col_names, index=col_names)
 
     return corr_dataframe
+
+
+def check_degenerative(values):
+    series = pd.Series(values)
+    counts = series.value_counts()
+
+    if len(counts) == 1:
+        return True
+
+    if len(counts) * 10 > len(series):
+        return False
+
+    if counts.iloc[0] / counts.iloc[1] > 20:
+        return True
+
+    return False
 
