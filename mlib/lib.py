@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-def cluster_corr_matrix(corr_dataframe, linkage='single'):
+def cluster_corr_matrix(corr_dataframe, linkage='single', clip=False):
     '''
     https://github.com/LeiG/Applied-Predictive-Modeling-with-Python.git
     '''
@@ -15,6 +15,9 @@ def cluster_corr_matrix(corr_dataframe, linkage='single'):
     col_names = corr_dataframe.columns
 
     Y = sch.linkage(corr_matrix, linkage, 'correlation')
+    if clip:
+        Y = Y.clip(min=0.0)
+
     Z = sch.dendrogram(Y, color_threshold=0, no_plot=True)['leaves']
     corr_matrix = corr_matrix[Z, :]
     corr_matrix = corr_matrix[:, Z]
